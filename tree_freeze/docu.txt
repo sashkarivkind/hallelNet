@@ -1,0 +1,1 @@
+Here we explore the freezing of a network as more and more constraints introduced
