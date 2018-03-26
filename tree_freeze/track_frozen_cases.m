@@ -11,5 +11,5 @@ for uu=conf_vec
         full_consist(uu+1) = all(sub_tree.fro_conf.sfro(sub_tree.fro_conf.constr~=0));
     end
 end
-fprintf('self consistent elements in tree: %d\n',sum(full_consist))
+fprintf('depth %d, self consistent elements in tree: %d\n',depth, sum(full_consist))
 end

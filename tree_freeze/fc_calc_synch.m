@@ -27,25 +27,25 @@ end
 
 evolving = 1; % indicates whether the frozen core changes from step to step
 while evolving
+    %[1]: checking for toggling of nodes that are assumed constrained 
+    if ismember(-1,sfro.*constr)
+        inconsist_nodes=find(sfro.*constr==-1);
+        inconsist_flag=1;
+        break
+    end
+    
     prev_sfro = sfro;
     s_eff = prep_s_eff(sfro,constr);
     this_b=b+W*s_eff;
     
-    %[1]: checking for toggling in nodes that assumed frozen
+    %[2]: checking for toggling in nodes that assumed frozen
     if ismember(-1,sign(this_b).*sfro)
         error('sign is not preserved at one or more of frozen nodes')
     end
 
     next_fro=abs(this_b)>sum(abs(W(:,~s_eff)),2);
     sfro = sign(this_b).*next_fro;
-    
-    %[2]: checking for toggling of nodes that are assumed constraints
-    if ismember(-1,sfro.*constr)
-        inconsist_nodes=find(sign(sfro.*this_b)~=sfro);
-        inconsist_flag=1;
-        break
-    end
-    
+       
     %[3]: sanity check, after checks [1,2] we assume that the only thing that can happen to the core is an increase
     if ~isequal(sfro&prev_sfro,prev_sfro~=0)
         error('the freezing is not strictly monotonous!');
