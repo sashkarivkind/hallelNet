@@ -1,7 +1,7 @@
 % figure; 
 epsilon=1e-6;
-ref=400;
-mks=2;
+ref=300;
+mks=5;
 run_prefix = 'core_over_m_v1_';
 cc='rgbm'
 ss='d*+xo'
@@ -14,6 +14,7 @@ gamma_k_out= gamma_k_out_vec(jj);
 run_name = [run_prefix , 'N_' , num2str(N) , '_gamma_k_out_' ,num2str(gamma_k_out)];
 load([run_name,'.mat']);
 ccss=[cc(ii),ss(jj),'-'];
+ccssd=[cc(ii),':'];
 m_mat=repmat((1:m_max),mc_tries,1);
 nfro_vec_normed=nfro_vec./(N-m_mat);
 p_frozen_hubs=mean((nfro_vec_normed).^m_mat);
@@ -42,15 +43,20 @@ ksmooth = smooth_xy(nfro_vec_normed(:),k_mean(:),1000);
 figure(ref+1);
 plot(bsmooth.x,bsmooth.y,ccss,'markersize',mks);
 hold on;
-plot(bsmooth.x,bsmooth.ymsd,ccss,'markersize',mks);
-plot(bsmooth.x,bsmooth.ypsd,ccss,'markersize',mks);
+plot(bsmooth.x,bsmooth.ymsd,ccssd,'markersize',mks);
+plot(bsmooth.x,bsmooth.ypsd,ccssd,'markersize',mks);
+
+xlabel('b');
+ylabel('frozen');
+
 
 figure(ref+2);
 plot(ksmooth.x,ksmooth.y,ccss,'markersize',mks)
 hold on;
 plot(ksmooth.x,ksmooth.ymsd,ccssd,'markersize',mks)
 plot(ksmooth.x,ksmooth.ypsd,ccssd,'markersize',mks)
-
+xlabel('b');
+ylabel('< k >');
 end
 end
 % figure;
