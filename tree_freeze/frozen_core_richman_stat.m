@@ -1,4 +1,4 @@
-run_prefix = 'richman_run1_';
+run_prefix = 'richman_run3_';
 
 mc_tries=200;
 m_max=30;
@@ -36,6 +36,7 @@ for N=[1000];%, 2000, 4000]
                     W_fix=W;
                     W_fix(~~fro_conf_out.constr,:)=...
                         diag(fro_conf_out.sfro(~~fro_conf_out.constr))*W_fix(~~fro_conf_out.constr,:);
+                    s_eff = prep_s_eff(fro_conf_out.sfro,fro_conf_out.constr,0);
                     x_0=randn(N,1).*(~s_eff)+s_eff;
                     pp=async_pertube_fun(W_fix,struct('x_0',x_0,'frozen',fro_conf_out.sfro,'t_max',40));
                     p_conv(ii)=mean(pp.pert_diff_fro==0);
