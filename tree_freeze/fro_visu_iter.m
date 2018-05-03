@@ -40,14 +40,14 @@ hold on;
 bsmooth = smooth_xy(nfro_vec_normed(:),bstat_L2(:)*sqrt(N)/N,1000);
 ksmooth = smooth_xy(nfro_vec_normed(:),k_mean(:),1000);
 
-figure(ref+1);
+figure(ref+91);
 plot(bsmooth.x,bsmooth.y,ccss,'markersize',mks);
 hold on;
 plot(bsmooth.x,bsmooth.ymsd,ccssd,'markersize',mks);
 plot(bsmooth.x,bsmooth.ypsd,ccssd,'markersize',mks);
 
-xlabel('b');
-ylabel('frozen');
+ylabel('b');
+xlabel('frozen');
 
 
 figure(ref+2);
