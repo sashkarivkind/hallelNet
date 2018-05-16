@@ -12,6 +12,11 @@ function o=lumping_methods_prep(N,m);
         fro_=fro(m:end);
         constr_=constr(m:end);
     end
+    function [W_,x_,fro_,constr_]=fun3(W,x,fro,constr)
+    	 [W_,x_,fro_,constr_]=fun2(W,x,fro,constr);
+	W_(1,1)=0;    
+    end
 o{1}=@fun1;
 o{2}=@fun2;
+o{3}=@fun3;
 end
