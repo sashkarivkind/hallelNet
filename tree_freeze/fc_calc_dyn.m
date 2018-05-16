@@ -1,6 +1,6 @@
 function [nf,steps,fro_conf,...
-    inconsist_flag,inconsist_nodes]=fc_calc_dyn(W,b,fro_conf,strict);
-%computes 'empirical' frozen core based on transient simulation 
+    inconsist_flag,inconsist_nodes]=fc_calc_dyn(W,b,fro_conf,strict,opt);
+%computes 'empirical' frozen core based on transient simulation
 %inputs:
 %W the matrix of interest
 %b the extrnal bias
@@ -12,54 +12,20 @@ function [nf,steps,fro_conf,...
 %the one that is induced by the frozen core
 %inconsist_flag - rised if one or more of bits that are assumed frozen flip
 %inconsist_nodes -  of these bits
+if nargin < 5
+    opt.select_rule = @max_core;
+end
 steps=0;
 inconsist_flag = 0;
 inconsist_nodes=[];
-if nargin<3
-    %     fro=logical(zeros(size(W,1),1));
-    sfro=(zeros(size(W,1),1));
-    constr=(zeros(size(W,1),1));
-else
-    %     fro = fro_conf.fro;
-    sfro = fro_conf.sfro;
-    constr = fro_conf.constr;
-end
+outstat = async_run_mult_ic(W,struct('fro_conf',fro_conf));
 
-if nargin <4
-    strict = 1;
+fro_conf.sfro = opt.select_rule(outstat.fro_full);
+% fro_conf.constr = outstat.constr;
+nf=sum(fro_conf.sfro~=0);
 end
-evolving = 1; % indicates whether the frozen core changes from step to step
-while evolving
-    %[1]: checking for toggling of nodes that are assumed constrained
-    if strict
-        if ismember(-1,sfro.*constr)
-            inconsist_nodes=find(sfro.*constr==-1);
-            inconsist_flag=1;
-            break
-        end
-    end
-    prev_sfro = sfro;
-    s_eff = prep_s_eff(sfro,constr,strict);
-    this_b=b+W*s_eff;
-    
-    %[2]: checking for toggling in nodes that assumed frozen
-    if ismember(-1,sign(this_b).*sfro...
-            .*(strict|(constr==0))) %if strict then all nodes are verified, if not - only unconstrained ones
-        error('sign is not preserved at one or more of frozen nodes')
-    end
-    
-    next_fro=abs(this_b)>sum(abs(W(:,~s_eff)),2);
-    sfro = sign(this_b).*next_fro;
-    
-    %[3]: sanity check, after checks [1,2] we assume that the only thing that can happen to the core is an increase
-    if ~isequal(sfro&prev_sfro,prev_sfro~=0)
-        error('the freezing is not strictly monotonous!');
-    end
-    evolving = ~isequal(sfro,prev_sfro);
-    steps=steps+1;
+function fc=max_core(fro_mat)
+[~,ii]=max(sum(~~fro_mat,1)); %count frozen core size per column
+fc= fro_mat(:,ii);
 end
-nf=sum(sfro~=0);
-fro_conf.sfro = sfro;
-fro_conf.constr = constr;
-
 

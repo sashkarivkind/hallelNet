@@ -1,25 +1,26 @@
 clear;
-
-run_prefix = 'debu2';
+barbara_core=0;
+run_prefix = 'dynrich';
 mc_tries=500;
+
 m_max=10;
 T_max=50;
-N_perturbations = 10;
+N_perturbations = 100;
 k_m_out = 1; %minimal degree of power law ditribution of scale free out degree
 perturb_hubs_vec=0:1;
 preturbation_frac=0.1;
 num_lumping_methods=2;
 
-%%output initialization
-% p_conv=cell(mc_tries);%,num_lumping_methods,length(perturb_hubs_vec));
-% % d_conv{ii,jj,kk} = -ones(N_perturbations);
-% % m_conv{ii,jj,kk} = -1;
-% % fc_conv{ii,jj,kk} = -1;
 
+if barbara_core
+    fc_calc=@fc_calc_synch;
+else
+    fc_calc=@fc_calc_dyn;
+end
 
-for N=[1000, 2000]
+for N=1000%[1000, 2000]
     
-    for gamma_k_out = 2.1:0.1:2.3%2.0:0.2:2.4; % 2.2=power of power law ditribution of scale free out degree
+    for gamma_k_out =2.2% 2.1:0.1:2.3%2.0:0.2:2.4; % 2.2=power of power law ditribution of scale free out degree
         
         if m_max
             m_max_tag = m_max;
@@ -29,7 +30,7 @@ for N=[1000, 2000]
         
         run_name = [run_prefix , 'N_' , num2str(N) , '_gamma_k_out_' ,num2str(gamma_k_out)];
 
-        parfor ii=1:mc_tries
+        for ii=1:mc_tries
             W_top = createNet(N, 'sf' , 'binom', k_m_out, gamma_k_out, [], 'sort', 'out') ~= 0; %create sf-out binom-in network
             W=W_top.*randn(size(W_top));
             fro_constr = zeros(N,1);
@@ -39,7 +40,7 @@ for N=[1000, 2000]
                 fro_constr(m+1:end)=0;
                 ksi=ones(m,1);
                 [nfro,steps,fro_conf_out]=...
-                    fc_calc_synch(W,zeros(N,1),...
+                    fc_calc(W,zeros(N,1),...
                     struct('sfro',fro_sfro,'constr',fro_constr),0);
                 fro_sfro=fro_conf_out.sfro;
                 if all(fro_sfro(~~fro_constr))

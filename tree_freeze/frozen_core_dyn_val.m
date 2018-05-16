@@ -56,11 +56,17 @@ for N=[1000, 2000]
                                 struct('x_0',x_0,...
                                 'frozen',fro_sfro,...
                                 't_max',T_max));
-                        figure(3); 
-                        hist(pp.fro_dyn)    ;
-                        title(['nfro = ', num2str(nfro)]);
-                        drawnow;
-                        pause;
+%                         figure(3); 
+%                         hist(pp.fro_dyn)    ;
+%                         title(['nfro = ', num2str(nfro)]);
+%                         drawnow;
+%                         pause;
+figure(3); 
+plot(nfro, pp.fro_min,'xb');
+hold on;
+plot([nfro,nfro], [max(pp.fro_dyn),min(pp.fro_dyn)],'o-r');
+drawnow;
+
                         end
                     end
                     break
