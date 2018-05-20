@@ -8,8 +8,10 @@ barbara_core = 0;
 
 if barbara_core
     fc_calc=@fc_calc_synch;
+    fc_opt=struct();
 else
     fc_calc=@fc_calc_dyn;
+    fc_opt=struct('t_max',50);
 end
 
 for N=[1000, 2000, 4000]
@@ -31,7 +33,8 @@ for N=[1000, 2000, 4000]
                 ksi=ones(m,1);
                 W_eff=W(m+1:end,m+1:end);
                 b_eff=W(:,1:m)*ksi;
-                [nfro_vec(ii,m),steps,fro_conf_out]=fc_calc(W,0*b_eff,fro_conf,0);
+                [nfro_vec(ii,m),steps,fro_conf_out]=...
+                    fc_calc(W,0*b_eff,fro_conf,0,fc_opt);
                 bstat_L1(ii,m)=norm(b_eff,1);
                 bstat_L2(ii,m)=norm(b_eff,2);
                 k_mean(ii,m)=mean(sum(W_eff~=0));
@@ -45,7 +48,7 @@ for N=[1000, 2000, 4000]
             disp(ii);
         end
     end 
-    %         save([run_name,'.mat']);
+            save([run_name,'.mat']);
 end
 % end
 % figure;

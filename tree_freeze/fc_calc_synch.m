@@ -1,5 +1,5 @@
 function [nf,steps,fro_conf,...
-    inconsist_flag,inconsist_nodes]=fc_calc_synch(W,b,fro_conf,strict);
+    inconsist_flag,inconsist_nodes]=fc_calc_synch(W,b,fro_conf,strict,vararg);
 %inputs:
 %W the matrix of interest
 %b the extrnal bias

@@ -12,13 +12,14 @@ function [nf,steps,fro_conf,...
 %the one that is induced by the frozen core
 %inconsist_flag - rised if one or more of bits that are assumed frozen flip
 %inconsist_nodes -  of these bits
-if nargin < 5
+if ~isfield(opt,'select_rule')
     opt.select_rule = @max_core;
 end
+opt.fro_conf=fro_conf; %todo: merge these two structures at the interface
 steps=0;
 inconsist_flag = 0;
 inconsist_nodes=[];
-outstat = async_run_mult_ic(W,struct('fro_conf',fro_conf));
+outstat = async_run_mult_ic(W,opt);
 
 fro_conf.sfro = opt.select_rule(outstat.fro_full);
 % fro_conf.constr = outstat.constr;
