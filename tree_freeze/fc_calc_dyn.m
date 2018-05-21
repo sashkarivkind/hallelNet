@@ -24,6 +24,9 @@ outstat = async_run_mult_ic(W,opt);
 fro_conf.sfro = opt.select_rule(outstat.fro_full);
 % fro_conf.constr = outstat.constr;
 nf=sum(fro_conf.sfro~=0);
+if ~isscalar(nf)
+    nf = struct('pass',nf);
+end
 end
 function fc=max_core(fro_mat)
 [~,ii]=max(sum(~~fro_mat,1)); %count frozen core size per column
