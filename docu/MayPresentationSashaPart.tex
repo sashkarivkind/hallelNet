@@ -1,0 +1,145 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  This Beamer template was created by Cameron Bracken.
+%%  Anyone can freely use or modify it for any purpose
+%%  without attribution.
+%%
+%%  Last Modified: January 9, 2009
+%%
+
+\documentclass[xcolor=x11names,compress]{beamer}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage{amsmath}
+
+%% General document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usepackage[style=authoryear]{biblatex}
+%\usetikzlibrary{decorations.fractals}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Beamer Layout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\useoutertheme[subsection=false,shadow]{miniframes}
+\setbeamerfont{title like}{shape=\scshape}
+\setbeamerfont{frametitle}{shape=\scshape}
+
+\setbeamercolor*{lower separation line head}{bg=DeepSkyBlue4} 
+\setbeamercolor*{normal text}{fg=black,bg=white} 
+\setbeamercolor*{alerted text}{fg=red} 
+\setbeamercolor*{example text}{fg=black} 
+\setbeamercolor*{structure}{fg=black} 
+
+\usenavigationsymbolstemplate{}
+\setbeamercolor*{palette tertiary}{fg=black,bg=black!10} 
+\setbeamercolor*{palette quaternary}{fg=black,bg=black!10} 
+
+\renewcommand{\(}{\begin{columns}}
+\renewcommand{\)}{\end{columns}}
+\newcommand{\<}[1]{\begin{column}{#1}}
+	\renewcommand{\>}{\end{column}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\useoutertheme{infolines} % authors, etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\bibliography{presentation.bib}
+\bibliography{arivkindNeuroBib}	
+\newcommand{\sign}{\mathrm{sign}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg, .eps}
+
+\usepackage{color, colortbl}  
+\definecolor{LightCyan}{rgb}{0.88,0.8,1}
+\begin{document}
+	
+	
+	\begin{frame}{}
+		\title{Simplifying scale-free networks}
+		\subtitle[short]{Some analytical insights}
+		\author{
+			Hallel Schreier and Alexander Rivkind}
+		\date{\today}
+		\titlepage
+	\end{frame}
+	
+%	\begin{frame}{Table of contents}
+%		\tableofcontents
+%	\end{frame}
+	
+	\begin{frame}{when lumping works and when it fails}
+	 As lumped subset of nodes grows it develops non-trivial internal dynamics which might be unstable.
+		 \begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{lumping_vs_stability}
+		\caption[Stability of frozen core]{m - size of lumped hub. $P_{pm}$ - probability to converge to the original or to fully inverted frozen core.}
+		\label{fig:lumpingvsstability}
+		\end{figure}
+  	\end{frame}
+	
+	\begin{frame}[t]{How far can we lump?  - setting hub size}
+		1. How strong the lumped hub should be to make a network stable.\\
+		2. How many nodes can be lumped w/o compromising network properties. 
+	\end{frame}	
+	
+	\begin{frame}[t]{Fixed points are typical for random neural networks}
+		The state $s^*=(1,1,1,1,1)^T$ is a fixed point with probability $2^{-N}$, (happens when $\sum_{j=1}^{N} W_{ij}  >0 \quad \forall i $) and same for any other state $s^*$. \\
+		As we assume (and will explain in sequel) that \[P\{s^1\:is\:f.p|s^2:is\:f.p \} \approx P\{s^1\:is\:f.p \}\] for any $s^1\ne\pm s^2$.\\
+		Remark: for a more general case and regorous treatment - 
+		 \[ \mathbf{E}(\#f.p.)=1.\]. 
+		 \cite{mori_PhysRevLett.119.028301}.\\
+	\end{frame}
+	
+	\begin{frame}[t]{if the network was dense and gaussian}
+		for any pair of trajectories $x^1$, $x^2$ we would have:
+		\[
+		\langle
+		x^{1}_{t+1},x^{2}_{t+1}
+		\rangle
+		=g^2
+		\langle
+		\sign (x^{1}_{t}),\sign(x^{2}_{t})
+		\rangle
+		\] 
+		and thus a mapping between correlation $c^{12}_{t+1}=\langle x^{1}_{t+1},x^{2}_{t+1}\rangle$ and $c^{12}_{t}=\langle x^{1}_{t},x^{2}_{t}\rangle$
+	\end{frame}
+	
+	\begin{frame}[t]{By Gaussian MFT works f.p. are \textit{not} stable}		
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{cttp1_u}
+		\caption{meanfield estimate of correlation evolution shown for different values of external drive u}
+		\label{fig:cttp1u}
+	\end{figure}	
+	\end{frame}
+	
+		\begin{frame}[t]{Frozen core is upper bounded}
+			
+		\end{frame}
+
+	
+	\begin{frame}[t]{How MFT breaks in star network}
+		1. dynamic wise: $W^TW\ne I$.\\
+		2. state wise: %todo $x \not \sim   \mathscr{N}$.
+	\end{frame}
+
+	\begin{frame}[t]{Limit cycles are long but not very long}
+		If all links were random %todo
+	\end{frame}
+
+	\begin{frame}[t]{So frozen cores might  survive}
+		
+	\end{frame}
+
+	\begin{frame}[t]{Limit cycles are long but not very long}
+		
+	\end{frame}
+	
+		\begin{frame}[t]{Work in progress - }
+			
+		\end{frame}		
+	
+	
+%\bibliographystyle{unsrt}
+
+\end{document}
