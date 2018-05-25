@@ -12,13 +12,11 @@ d=0.5*(1-c);
 v1=binornd(repmat(round(d*N),mc_samples,1),k/N);
 v2=binornd(repmat(round((1-d)*N),mc_samples,1),k/N);
 
-v1=sqrt(v1).*randn(size(v1));
-v2=sqrt(v2).*randn(size(v2));
+v1=sqrt(v1/k).*randn(size(v1));
+v2=sqrt(v2/k).*randn(size(v2));
 
 uu = (u+epsilon)*randn(mc_samples,length(d));
 c_out=mean(...
     phi(v2+v1+uu).*phi(v2-v1+uu),...
     1);
-% c_out=mean(...
-%     phi(y*v1).*phi(y*v2),...
-%     1);
+
