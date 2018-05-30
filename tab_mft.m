@@ -8,6 +8,6 @@ for kk=1:(length(k_vec))
 %     disp('------------------------')
 end
 figure; 
-semilogy(N_vec,gg','x-'); 
+semilogy(N_vec,gg','o-'); 
 xlabel('N');
 legend(num2str(k_vec'));

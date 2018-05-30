@@ -7,7 +7,7 @@ nom.ntries=1000;
 nom.t_max=1000;
 nom.dinit=0.1;
 nom.ana=1;
-nom.ana_pupd=0.1;
+nom.sim_pupd=0.1;
 nom.u=1;
 
 nomfields=fields(nom);
@@ -28,16 +28,18 @@ u=opt.u;
 dd12=0.5*(1-c12);
 dd0=0.5*(1-c0);
 conv=zeros(ntries,1);
+fp=zeros(ntries,2);
 d_min_vec=2*ones(ntries,1);
 parfor this_try=1:ntries
     d=dinit;
     conv(this_try)=0;
+    fp(this_try,:)=[0,0];
     d_hist=2*ones(t_max,1);
     if ~opt.ana
         W=sparse(binoW(N,k));
         s12=sign(randn(N,1)*[1,1]);
         s12(1:round(N*d),1) = -s12(1:round(N*d),1);
-        uu=u*randn(N,1)*[1,1];
+        uu=u*randn(N,1)*[1,1]/sqrt(k);
     end
     for t=1:t_max
         if opt.ana
@@ -45,17 +47,19 @@ parfor this_try=1:ntries
             d=binornd(N,dd12(d_indx))/N;
         else
             s12_temp=sign(W*s12+uu);
-            upd_index=rand(N,1)<nom.ana_pupd;
+            fp(this_try,:)=all(s12_temp==s12,1);
+            upd_index=rand(N,1)<opt.sim_pupd;
             s12(upd_index,:)=s12_temp(upd_index,:);
             d=mean(s12(:,1)~=s12(:,2));
         end
         conv(this_try) = d<1/N;
         d_hist(t)=d;
         d_min_vec(this_try)=min(d_hist);
-        if conv(this_try)
+        if all(fp(this_try,:)) %breaking only if both trajectories reached a fixed point
             break
         end
     end
 end
-o.conv=mean(conv);
+o.conv=conv;
 o.d_min=d_min_vec;
+o.fp=fp;
