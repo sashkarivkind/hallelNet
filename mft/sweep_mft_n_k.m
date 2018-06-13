@@ -1,5 +1,5 @@
 clear nk_table
-ana=0; %doing sims, not analytic calculation
+ana=1; %doing sims, not analytic calculation
 k_vec=[2     3     4     5     6];
 N_vec=[100,500,1000,1500,3000,10000];
 for nn=1:length(N_vec)

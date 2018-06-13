@@ -3,12 +3,15 @@ if nargin<3
     opt = struct;
 end
 nom.N=1000;
+nom.k=4;
 nom.ntries=1000;
 nom.t_max=1000;
 nom.dinit=0.1;
 nom.ana=1;
 nom.sim_pupd=0.1;
 nom.u=1;
+nom.corr_enable=1;
+nom.autocorr_from_mft=0; %autcorrelation is assumed to be between subseque
 nom.save_hist=0;
 nom.enforce_fp=0;
 
@@ -29,6 +32,12 @@ u=opt.u;
 
 dd12=0.5*(1-c12);
 dd0=0.5*(1-c0);
+[dmft,dndx]=d_star(dd0,dd12);
+if dmft==0 %just an artificial trick to overcome case where zero is stable
+    dmft=1
+else
+    dmft
+end
 conv=zeros(ntries,1);
 fp=zeros(ntries,2);
 d_min_vec=2*ones(ntries,1);
@@ -37,6 +46,7 @@ if opt.save_hist
 end
 parfor this_try=1:ntries
     d=dinit;
+    delta_d=0;
     conv(this_try)=0;
     fp(this_try,:)=[0,0];
     d_hist=2*ones(1,t_max);
@@ -55,7 +65,14 @@ parfor this_try=1:ntries
     for t=1:t_max
         if opt.ana
             [~,d_indx]=min(abs(dd0-d));
-            d=binornd(N,dd12(d_indx))/N;
+            delta_d_inc=binornd(N,dd12(d_indx))/N-d;
+            if opt.autocorr_from_mft
+                dupd=dmft;
+            else
+                dupd=d;
+            end
+            delta_d=delta_d*(1-dupd)+delta_d_inc*dupd;
+            d=d+delta_d;
         else
             s12_temp=sign(W*s12+uu);
             fp(this_try,:)=all(s12_temp==s12,1);
