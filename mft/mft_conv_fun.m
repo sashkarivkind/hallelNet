@@ -1,6 +1,14 @@
-function o=mft_conv_fun(c0,c12,opt)
-if nargin<3
-    opt = struct;
+function o=mft_conv_fun(varargin)
+if nargin==1 %only one argument is given, so it is assumed to be opt
+    opt = varargin{1};
+elseif nargin==2 %only c0 and c12 are given
+    c0 = varargin{1};
+    c12 = varargin{2};
+    opt=struct;
+elseif nargin==3 %only c0 and c12 are given
+    c0 = varargin{1};
+    c12 = varargin{2};
+    opt = varargin{3};
 end
 nom.N=1000;
 nom.k=4;
@@ -30,21 +38,30 @@ t_max=opt.t_max;
 dinit=opt.dinit;
 u=opt.u;
 
-dd12=0.5*(1-c12);
-dd0=0.5*(1-c0);
-[dmft,dndx]=d_star(dd0,dd12);
-if dmft==0 %just an artificial trick to overcome case where zero is stable
-    dmft=1
-else
-    dmft
+if opt.ana
+    dd12=0.5*(1-c12);
+    dd0=0.5*(1-c0);
+    disp('debu_0');
+    [dmft,dndx]=d_star(dd0,dd12);
+    if dmft==0 %just an artificial trick to overcome case where zero is stable
+        dmft=1
+    else
+        dmft
+    end
+else %parfor workaround  (need these variables defined for whatever reason)
+    dd12=0;
+    dd0=0;
+    dmft=0;
+    dndx=0;
 end
+
 conv=zeros(ntries,1);
 fp=zeros(ntries,2);
 d_min_vec=2*ones(ntries,1);
 if opt.save_hist
     d_hist_matrix=zeros(ntries,t_max);
 end
-parfor this_try=1:ntries
+for this_try=1:ntries
     d=dinit;
     delta_d=0;
     conv(this_try)=0;
