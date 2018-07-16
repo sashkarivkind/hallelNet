@@ -25,7 +25,7 @@ for gamma_k_out = [2.2 2.4 2.6]
             
             run_ndx
             
-            data = [data results];
+            data = {data results];
             
             
             %             del_indx = find([data{1, :}] == -1);
