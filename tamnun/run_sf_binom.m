@@ -36,6 +36,11 @@ l = length(a);
 b=log(1-[0:1/l:(1-1/l)]);
 gamma_fit = -((b*a')/(a*a')-1);
 
+W = sparse(N, N);
+mean_k = mean(sum(W_sf_top, 2));
+N_W_n_z = sum(sum(W_sf_top));
+W(W_sf_top) = (g_w/(sqrt(mean_k)))*randn(N_W_n_z, 1); %randomize interaction matrix, W_int, with given topology W_top
+%the variance of interaction strengths is g^2/<k>
 for qq=1:length(m_lump_vec)
     m_lump = m_lump_vec(qq);
     sigma_hub = sqrt(sum(mean(W_sf_top(:, 1:m_lump))));
@@ -52,11 +57,7 @@ end
 results{ll}.original_net=struct('gamma_k_out',gamma_k_out,'k_m_out',k_m_out,...
     'mean_k', mean_k,'gamma_fit',gamma_fit);
 
-W = sparse(N, N);
-mean_k = mean(sum(W_sf_top, 2));
-N_W_n_z = sum(sum(W_sf_top));
-W(W_sf_top) = (g_w/(sqrt(mean_k)))*randn(N_W_n_z, 1); %randomize interaction matrix, W_int, with given topology W_top
-%the variance of interaction strengths is g^2/<k>
+
 
 %simulate
 o=sim_dyn(W);
