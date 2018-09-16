@@ -1,6 +1,6 @@
 %load('T_mats.mat');
 addpath('../misc/')
-runname = 'default_run_name';
+runname = 'up_run_name_N1500';
 if ~isdir(runname)
     mkdir(runname)
 end
