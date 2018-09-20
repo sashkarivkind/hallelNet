@@ -2,7 +2,7 @@
 
 #PBS -N var_g
 #PBS -q  barak_q  
-#PBS -M hallels@campus.technion.ac.il
+#PBS -M arivkind@campus.technion.ac.il
 
 #PBS -m n
 
@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 #PBS -l select=1:ncpus=1
 
-PBS_O_WORKDIR=/u/omrilab/hallel/run/temp
+PBS_O_WORKDIR=/u/arivkind/hallelNetTop/hallelNet-master/tamnun
 cd $PBS_O_WORKDIR
 
 MATLAB_COMMAND="disp(1);cpu_ind=$try;disp(2);run_matlab_script;disp(3);exit"
