@@ -65,11 +65,11 @@ for qq=1:length(m_lump_vec)
         results.str_sim{qq}=sim_dyn(W_str);
     end
     if param.do_str_ol_sim
-        results.str_ol_sim{qq}=sim_dyn(W_str,struct('constr',(1:N)'==1));
+        results.str_ol_sim{qq}=sim_dyn(W_str,struct('constr',(1:param.N)'==1));
     end
     if param.do_ol_sim
         this_ol_sim=sim_dyn(W,...
-            struct('constr',(1:N)'<=m_lump));
+            struct('constr',(1:param.N)'<=m_lump));
         this_ol_sim.m_ol=m_lump;
         results.open_loop_sims{qq}=this_ol_sim;
     end
