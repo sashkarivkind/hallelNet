@@ -65,7 +65,7 @@ for qq=1:length(m_lump_vec)
         results.str_sim{qq}=sim_dyn(W_str);
     end
     if param.do_str_ol_sim
-        results.str_ol_sim{qq}=sim_dyn(W_str,struct('constr',(1:param.N)'==1));
+        results.str_ol_sim{qq}=sim_dyn(W_str,struct('constr',(1:size(W_str,1))'==1));
     end
     if param.do_ol_sim
         this_ol_sim=sim_dyn(W,...
