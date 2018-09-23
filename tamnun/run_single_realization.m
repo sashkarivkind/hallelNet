@@ -17,9 +17,11 @@ nom.gamma_k_out = 2.4; % power of power law ditribution of scale free out degree
 %% star network parameters
 nom.m_lump=4;
 %% simulation options
+nom.sim_orig_net=1;
 nom.do_upnet=0;
 nom.do_ol_sim=0;
-
+nom.do_str_sim=1;
+nom.do_str_ol_sim=1;
 %% Assigning nominal parameters where needed
 param=nom_opt_assigner(param,nom);
 clear nom; % to avoid any bugs from using nominal values rather instead of the set ones.
@@ -54,9 +56,17 @@ m_lump_vec = param.m_lump;%todo
 for qq=1:length(m_lump_vec)
     m_lump = m_lump_vec(qq);%todo
     sigma_hub = sqrt(sum(mean(W_sf_top(:, 1:m_lump))));
-    [W_lamped_sf_top, W_str_top] = lump_net(W_sf_top, m_lump);
+    [W_lumped_sf_top, W_str_top] = lump_net(W_sf_top, m_lump);
     mean_k_str = mean(sum(W_str_top(2:end, 2:end)));
-    
+    k_in_hub = sum(W_str_top(1, :)~=0);
+    results.lumped_models{qq}=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump,'k_in_hub',k_in_hub);
+    W_str = W_str_top.*randn(size(W_str_top));
+    if param.do_str_sim
+        results.str_sim{qq}=sim_dyn(W_str);
+    end
+    if param.do_str_ol_sim
+        results.str_ol_sim{qq}=sim_dyn(W_str,struct('constr',(1:N)'==1));
+    end
     if param.do_ol_sim
         this_ol_sim=sim_dyn(W,...
             struct('constr',(1:N)'<=m_lump));
@@ -64,20 +74,20 @@ for qq=1:length(m_lump_vec)
         results.open_loop_sims{qq}=this_ol_sim;
     end
 end
+
 results.original_net=struct('gamma_k_out',param.gamma_k_out,'k_m_out',param.k_m_out,... %todo - fix redundant save
     'mean_k', mean_k,'gamma_fit',gamma_fit);
+results.param = param;
 
 %simulate
-results.sim = sim_dyn(W);
-
-    this_lumped_model=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump);
-    results.lumped_models{qq}=this_lumped_model;
+if param.sim_orig_net
+    results.sim = sim_dyn(W);
+end
 
 if param.do_upnet
     results.upnet_sim=sim_dyn(diag(sign(sum(W,2)))*W); %this is a network with a guaranteed fixed point at s=(1,1,1,1,1,1,1....1)
 end
 
 
-results.param = param;
 
 

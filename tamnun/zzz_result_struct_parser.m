@@ -1,5 +1,8 @@
 % res_path='default_run_name_dehub0/default_run_name/';
 %res_path='default_run_name_N1500/';
+%res_path='up_run_name_N1500_km0p5_gamma_2p1/up_run_name_N1500_km0p5_gamma_2p1/'
+% res_path='up_run_name_N1500/up_run_name_N1500/'
+res_path='k_min_v2_/k_min_v2_/'
 res_files=dir([res_path,'*.mat']);
 all_results = {};
 for rr=1:length(res_files)
@@ -43,5 +46,9 @@ sigma_hub=[lumped_net_p.sigma_hub];
 mean_k_str=[lumped_net_p.mean_k_str];
 m_lump=[lumped_net_p.m_lump];
 
-sim_p = [all_res_mat.sim];
+sim_p =  organize_cell_of_structs([all_res_mat.sim]);
+param_p =  organize_cell_of_structs([all_res_mat.param]);
 frozen_core=[sim_p.frozen_core];
+
+% upnet_sim_p = organize_cell_of_structs([all_res_mat.upnet_sim]);
+%frozen_core=[upnet_sim_p.frozen_core];
