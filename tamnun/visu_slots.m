@@ -1,8 +1,8 @@
-s_vec=0.4:0.005:0.6;
-a0=-6; a1=20;
-k_vec=a0+a1*s_vec;
-ds=0.05;
-dk=0.25;
+k_vec=1:0.05:5;
+a0=0.5; a1=0;
+s_vec=a0+a1*k_vec;
+ds=0.2;
+dk=0.1;
 fz_th=0.9;
 qfp_vec=zeros(size(s_vec));
 n_vec =zeros(size(s_vec)); 

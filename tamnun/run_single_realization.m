@@ -17,11 +17,15 @@ nom.gamma_k_out = 2.4; % power of power law ditribution of scale free out degree
 %% star network parameters
 nom.m_lump=4;
 %% simulation options
-nom.sim_orig_net=1;
+nom.sim_orig_net=0;
 nom.do_upnet=0;
 nom.do_ol_sim=0;
 nom.do_str_sim=1;
 nom.do_str_ol_sim=1;
+nom.save_detailed_info=0;
+nom.k_lump_max = 10;
+
+nom.manu_star = 0;
 %% Assigning nominal parameters where needed
 param=nom_opt_assigner(param,nom);
 clear nom; % to avoid any bugs from using nominal values rather instead of the set ones.
@@ -56,11 +60,20 @@ m_lump_vec = param.m_lump;%todo
 for qq=1:length(m_lump_vec)
     m_lump = m_lump_vec(qq);%todo
     sigma_hub = sqrt(sum(mean(W_sf_top(:, 1:m_lump))));
-    [W_lumped_sf_top, W_str_top] = lump_net(W_sf_top, m_lump);
+    if param.manu_star
+        W_str_top=1.0*(rand(param.N)<param.k_str_manu/param.N);
+        W_str_top(:,1)=param.sighub_str_manu;
+        W_str_top(1,:)=rand(param.N,1)<param.kinhub_str_manu/param.N;
+    else
+        [W_lumped_sf_top, W_str_top] = lump_net(W_sf_top, m_lump);
+    end
     mean_k_str = mean(sum(W_str_top(2:end, 2:end)));
     k_in_hub = sum(W_str_top(1, :)~=0);
     results.lumped_models{qq}=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump,'k_in_hub',k_in_hub);
-    W_str = W_str_top.*randn(size(W_str_top));
+    if param.save_detailed_info
+        results.lumped_models{qq}.detailed_star_info = create_detailed_star_info(W_sf_top,m_lump,param.k_lump_max);
+    end
+    W_str = sparse(W_str_top.*randn(size(W_str_top)));
     if param.do_str_sim
         results.str_sim{qq}=sim_dyn(W_str);
     end
