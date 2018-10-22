@@ -4,7 +4,9 @@
 % res_path='up_run_name_N1500/up_run_name_N1500/'
 % res_path='grid_star_nwkLg/grid_star_nwkLg/'
 % res_path='k_min_gamma_sweep/k_min_gamma_sweep/';
-res_path='k_min_v2_/k_min_v2_/';
+% res_path = 'detailed_hub2/detailed_hub2/';
+% res_path = 'sweep_lump_m/sweep_lump_m/';
+res_path = 'deleteme5/'
 res_files=dir([res_path,'*.mat']);
 all_results = {};
 for rr=1:length(res_files)

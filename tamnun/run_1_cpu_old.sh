@@ -15,7 +15,7 @@
 PBS_O_WORKDIR=/u/arivkind/hallelNetTop/hallelNet-master/tamnun
 cd $PBS_O_WORKDIR
 
-MATLAB_COMMAND="disp(1);run_ndx=$try;disp(2);run_matlab_fun;disp(3);exit"
+MATLAB_COMMAND="disp(1);cpu_ind=$try;disp(2);run_matlab_script;disp(3);exit"
 MATLAB_LOG="debugLOG_$try.log"
 #echo $MATLAB_COMMAND
 #MATLAB run command
