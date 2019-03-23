@@ -22,6 +22,8 @@ nom.do_upnet=0;
 nom.do_ol_sim=0;
 nom.do_str_sim=1;
 nom.do_str_ol_sim=1;
+nom.do_gstr_sim=1;
+nom.do_gstr_ol_sim=1;
 nom.save_detailed_info=0;
 nom.k_lump_max = 10;
 nom.upstar = 0;
@@ -71,24 +73,37 @@ for qq=1:length(m_lump_vec)
     end
     mean_k_str = mean(sum(W_str_top(2:end, 2:end)));
     k_in_hub = sum(W_str_top(1, :)~=0);
+    %% taking care of gaussian hub
+    W_gstr_top = W_str_top;
+    W_gstr_top(:,1)=sigma_hub;
+    W_gstr_top(1,1)=0;
+    %%
     results.(['lumped_models', num2str(qq)])=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump,'k_in_hub',k_in_hub);
     if param.save_detailed_info
         results.(['lumped_models', num2str(qq)]).detailed_star_info = create_detailed_star_info(W_sf_top,m_lump,param.k_lump_max);
     end
     W_str = sparse(W_str_top.*randn(size(W_str_top)));
+    W_gstr = sparse(W_gstr_top.*randn(size(W_gstr_top)));
     if param.upstar
         W_str=diag(sign(sum(W_str,2)))*W_str;
     end
     if param.do_str_sim
         results.(['str_sim', num2str(qq)])=sim_dyn(W_str);
     end
+    
+    if param.do_gstr_sim
+        results.(['gstr_sim', num2str(qq)])=sim_dyn(W_gstr);
+    end
+    
     for ic_index = 1:param.iterate_random_ic_sim
         results.(['str_sim_ic', num2str(qq),'_',num2str(ic_index)])=sim_dyn(W_str);
     end
-    
-    
+        
     if param.do_str_ol_sim
         results.(['str_ol_sim', num2str(qq)])=sim_dyn(W_str,struct('constr',(1:size(W_str,1))'==1));
+    end
+    if param.do_gstr_ol_sim
+        results.(['gstr_ol_sim', num2str(qq)])=sim_dyn(W_gstr,struct('constr',(1:size(W_gstr,1))'==1));
     end
     if param.do_ol_sim
         this_ol_sim=sim_dyn(W,...
