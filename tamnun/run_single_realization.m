@@ -24,6 +24,8 @@ nom.do_str_sim=1;
 nom.do_str_ol_sim=1;
 nom.do_gstr_sim=1;
 nom.do_gstr_ol_sim=1;
+nom.do_gfstr_sim=1;
+nom.do_gfstr_ol_sim=1;
 nom.save_detailed_info=0;
 nom.k_lump_max = 10;
 nom.upstar = 0;
@@ -64,6 +66,8 @@ m_lump_vec = param.m_lump;%todo
 for qq=1:length(m_lump_vec)
     m_lump = m_lump_vec(qq);%todo
     sigma_hub = sqrt(sum(mean(W_sf_top(:, 1:m_lump))));
+    f = mean(sum(W_sf_top(:, 1:m_lump),2)>1e-6);
+
     if param.manu_star
         W_str_top=1.0*(rand(param.N)<param.k_str_manu/param.N);
         W_str_top(:,1)=param.sighub_str_manu;
@@ -77,13 +81,19 @@ for qq=1:length(m_lump_vec)
     W_gstr_top = W_str_top;
     W_gstr_top(:,1)=sigma_hub;
     W_gstr_top(1,1)=0;
+    %% taking care of sparse gaussian hub
+    W_gfstr_top = W_str_top;
+    W_gfstr_top(:,1)=0;
+    W_gfstr_top(1:round(f*param.N),1)=sigma_hub*sqrt(1/f);
+    W_gfstr_top(1,1)=0;
     %%
-    results.(['lumped_models', num2str(qq)])=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump,'k_in_hub',k_in_hub);
+    results.(['lumped_models', num2str(qq)])=struct('sigma_hub',sigma_hub,'mean_k_str',mean_k_str,'m_lump',m_lump,'k_in_hub',k_in_hub,'f',f);
     if param.save_detailed_info
         results.(['lumped_models', num2str(qq)]).detailed_star_info = create_detailed_star_info(W_sf_top,m_lump,param.k_lump_max);
     end
     W_str = sparse(W_str_top.*randn(size(W_str_top)));
     W_gstr = sparse(W_gstr_top.*randn(size(W_gstr_top)));
+    W_gfstr = sparse(W_gfstr_top.*randn(size(W_gfstr_top)));
     if param.upstar
         W_str=diag(sign(sum(W_str,2)))*W_str;
     end
@@ -95,6 +105,11 @@ for qq=1:length(m_lump_vec)
         results.(['gstr_sim', num2str(qq)])=sim_dyn(W_gstr);
     end
     
+    if param.do_gfstr_sim
+        results.(['gfstr_sim', num2str(qq)])=sim_dyn(W_gfstr);
+    end
+    
+    
     for ic_index = 1:param.iterate_random_ic_sim
         results.(['str_sim_ic', num2str(qq),'_',num2str(ic_index)])=sim_dyn(W_str);
     end
@@ -105,6 +120,10 @@ for qq=1:length(m_lump_vec)
     if param.do_gstr_ol_sim
         results.(['gstr_ol_sim', num2str(qq)])=sim_dyn(W_gstr,struct('constr',(1:size(W_gstr,1))'==1));
     end
+    if param.do_gfstr_ol_sim
+        results.(['gfstr_ol_sim', num2str(qq)])=sim_dyn(W_gfstr,struct('constr',(1:size(W_gfstr,1))'==1));
+    end
+    
     if param.do_ol_sim
         this_ol_sim=sim_dyn(W,...
             struct('constr',(1:param.N)'<=m_lump));
