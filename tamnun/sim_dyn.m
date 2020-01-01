@@ -12,6 +12,8 @@ nom.t_max = 1000;  % if network does not converge end simulation at t=t_max
 nom.x0 = randn(N , 1) ; %I.C. for open  loop
 nom.constr=zeros(N,1);
 nom.tfro = 200; % time for node to be frozen to be included in frozen core
+nom.tauto = 200; %time for which autocorrelation is computed
+nom.do_autocorr = 0;
 
 opt=nom_opt_assigner(opt,nom);
 clear nom; % to avoid any bugs from using nominal values rather instead of the set ones.
@@ -40,8 +42,11 @@ end; % end Simulate Dynamics
 l = opt.tfro/opt.update_frac;
 X = x(:, T_sim-1)*ones(1, l);
 
-B =  0.5*abs(sign(X)- sign(x(:, (end-3-l):(end-4))));
+B =  0.5*abs(sign(X)- sign(x(:, (end-3-l):(end-4))));%note this is l, (small L), not 1
 D = sum(B, 2);
 o.frozen_core = sum(D==0)/N;
 o.final_dist_from_ones = mean(s_eff~=1);
 o.T_conv=T_conv;
+if opt.do_autocorr
+    o.autocorr =1/N* sign(x(:, (end-3-l):(end-4)))' * sign(x(:, (end-3-l):(end-4)));
+end

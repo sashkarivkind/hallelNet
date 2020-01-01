@@ -3,10 +3,25 @@
 %res_path='up_run_name_N1500_km0p5_gamma_2p1/up_run_name_N1500_km0p5_gamma_2p1/'
 % res_path='up_run_name_N1500/up_run_name_N1500/'
 % res_path='grid_star_nwkLg/grid_star_nwkLg/'
+%  res_path='sweep_strGrid_largeKN/sweep_strGrid_largeKN/'
+% res_path='sweep_strGridNew/sweep_strGridNew/'
 % res_path='k_min_gamma_sweep/k_min_gamma_sweep/';
+% res_path='sweep_Ng2/sweep_Ng2/';
+% res_path='sweep_sfFiniExt_postThesis/sweep_sfFiniExt_postThesis/';
+
+% res_path='sweep_allStars_N/sweep_allStars_N/'
+% res_path='sweep_sfFini_postThesis/sweep_sfFini_postThesis/';
+% res_path='sweep_sigma_fixk_star/sweep_sigma_fixk_star/'
+% res_path='sweep_gfstarN1500/sweep_gfstarN1500/'
+% res_path='sweep_gfstarManu/sweep_gfstarManu/'
+% res_path='sweep_gfstarKmin/sweep_gfstarKmin/' %figure sweep todo organize
+% res_path='sweep_gfstarKmin5K/sweep_gfstarKmin5K/'
+% res_path='k_min_v2_/k_min_v2_/';
 % res_path = 'detailed_hub2/detailed_hub2/';
-% res_path = 'sweep_lump_m/sweep_lump_m/';
-res_path = 'deleteme5/'
+% res_path = 'sweep_strGrid_postThesis/sweep_strGrid_postThesis/';
+% res_path = 'explore_perturbations/explore_perturbations/';
+% res_path='manu_sparse_local3/' %referee request
+res_path='fig4_repro_try1/' %referee request
 res_files=dir([res_path,'*.mat']);
 all_results = {};
 for rr=1:length(res_files)
@@ -14,6 +29,7 @@ for rr=1:length(res_files)
     all_results = {all_results{:} results{:}};
 end
 all_res_mat = cell2mat(all_results);
+% all_res_mat = cell2mat(all_results(good_rec));%temp fix, remove indexing
 
 % uu=[all_res_mat.open_loop_sims];
 % muu = [uu{:}];
