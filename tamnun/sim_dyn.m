@@ -14,6 +14,7 @@ nom.constr=zeros(N,1);
 nom.tfro = 200; % time for node to be frozen to be included in frozen core
 nom.tauto = 200; %time for which autocorrelation is computed
 nom.do_autocorr = 0;
+nom.do_participation_ratio = 1;
 
 opt=nom_opt_assigner(opt,nom);
 clear nom; % to avoid any bugs from using nominal values rather instead of the set ones.
@@ -49,4 +50,12 @@ o.final_dist_from_ones = mean(s_eff~=1);
 o.T_conv=T_conv;
 if opt.do_autocorr
     o.autocorr =1/N* sign(x(:, (end-3-l):(end-4)))' * sign(x(:, (end-3-l):(end-4)));
+end
+if opt.do_participation_ratio
+    smx=sign(x(:, (end-3-l):(end-4))); 
+    smx_tilde = smx-mean(smx,2)*ones(1,size(smx,2)); % zero mean version of s
+    cc =1/N* (smx * smx');
+    cc_tilde = 1/N* (smx_tilde * smx_tilde');
+    o.participation_ratio=trace(cc)^2/trace(cc^2);
+    o.participation_ratio_tilde=trace(cc_tilde)^2/trace(cc_tilde^2);
 end
