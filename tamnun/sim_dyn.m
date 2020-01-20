@@ -6,6 +6,7 @@ end
 %%%%%%%%%%%%%%
 %% Default parameters
 %%%%%%%%%%%%%%
+epsilon=1e-20;
 nom.update_frac = 0.1;
 nom.t_int = 0;  %start simulation at t_int
 nom.t_max = 1000;  % if network does not converge end simulation at t=t_max
@@ -14,7 +15,7 @@ nom.constr=zeros(N,1);
 nom.tfro = 200; % time for node to be frozen to be included in frozen core
 nom.tauto = 200; %time for which autocorrelation is computed
 nom.do_autocorr = 0;
-nom.do_participation_ratio = 1;
+nom.do_participation_ratio = 0;
 
 opt=nom_opt_assigner(opt,nom);
 clear nom; % to avoid any bugs from using nominal values rather instead of the set ones.
@@ -59,3 +60,4 @@ if opt.do_participation_ratio
     o.participation_ratio=trace(cc)^2/trace(cc^2);
     o.participation_ratio_tilde=trace(cc_tilde)^2/trace(cc_tilde^2);
 end
+o.source_counter_sim=sum(abs(sign(x(:,end))-epsilon));

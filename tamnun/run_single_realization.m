@@ -105,6 +105,12 @@ results.(['lumped_models', num2str(qq_legacy)])=struct('sigma_hub',sigma_hub,'me
 if param.save_detailed_info
     results.(['lumped_models', num2str(qq_legacy)]).detailed_star_info = create_detailed_star_info(W_sf_top,m_lump,param.k_lump_max);
 end
+
+results.srcs_str = remove_sources_from_lh(W_str_top);
+results.srcs_gstr = remove_sources_from_lh(W_gstr_top);
+results.srcs_gfstr = remove_sources_from_lh(W_gfstr_top);
+   
+
 %% done with topology related stuff, now applying actual  realization random weights
 for qq=1:param.number_of_weight_realizations
     W = sparse(param.N, param.N);
